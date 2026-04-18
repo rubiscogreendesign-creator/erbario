@@ -71,22 +71,20 @@
       "species": "characias"
     },
     {
-      "scientific_name": "Salvia officinalis",
-      "notes": "",
-      "subfamily": "",
-      "family": "Lamiaceae",
-      "origin": "",
-      "anecdote": "",
-      "genus": "Salvia",
-      "date_added": "2026-04-19",
-      "wikipedia_title": "Salvia_officinalis",
-      "common_names": [
-        "Salvia"
-      ],
-      "images": [],
-      "tags": [],
       "id": "salvia-officinalis",
-      "species": "officinalis"
+      "scientific_name": "Salvia officinalis",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Salvia",
+      "species": "officinalis",
+      "images": [],
+      "wikipedia_title": "Salvia_officinalis",
+      "origin": "",
+      "notes": "",
+      "anecdote": "La salvia comune è una piccola pianta perenne erbacea aromatica dai delicati fiori labiati appartenente alla famiglia delle Lamiacee.",
+      "tags": [],
+      "date_added": "2026-04-18"
     }
   ]
 }
