@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cerca specie · Il mio erbario</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+  .tool-main { max-width: 820px; margin: 0 auto; padding: 40px 30px 60px; }
+  .tool-title {
+    font-family: 'Didot', 'Bodoni 72', Georgia, serif;
+    font-size: 2rem; font-weight: 400;
+    color: var(--accent); margin: 0 0 8px;
+  }
+  .tool-intro { color: var(--muted); margin: 0 0 30px; font-size: 0.98rem; }
+  .search-box { display: flex; gap: 10px; margin-bottom: 30px; }
+  .search-box input {
+    flex: 1; padding: 12px 16px; font-size: 1rem;
+    border: 1px solid var(--border); background: var(--paper);
+    font-family: inherit; color: var(--ink);
+    border-radius: 0;
+  }
+  .search-box input:focus {
+    outline: none; border-color: var(--accent);
+  }
+  .search-box button {
+    padding: 12px 28px; background: var(--accent); color: white;
+    border: none; cursor: pointer; font-size: 0.95rem;
+    font-family: inherit; letter-spacing: 0.05em;
+  }
+  .search-box button:hover { background: #2d4560; }
+  .search-box button:disabled { opacity: 0.6; cursor: wait; }
+  .results { display: none; }
+  .results.show { display: block; }
+  .loading-state {
+    text-align: center; color: var(--muted);
+    padding: 40px; font-style: italic;
+  }
+  .result-section {
+    background: var(--paper); border: 1px solid var(--border);
+    padding: 22px 26px; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .result-section h3 {
+    margin: 0 0 16px;
+    font-family: 'Didot', Georgia, serif; font-weight: 400;
+    color: var(--accent); font-size: 1.3rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .result-section h3 small {
+    font-family: 'Iowan Old Style', Georgia, serif;
+    color: var(--muted); font-size: 0.72rem;
+    font-weight: normal; letter-spacing: 0.05em;
+  }
+  .data-row {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 12px; align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--border);
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-label {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+  }
+  .data-value {
+    font-family: 'Iowan Old Style', Georgia, serif;
+    color: var(--ink); font-size: 0.95rem;
+    overflow-wrap: anywhere;
+  }
+  .data-value em { color: var(--ink); }
+  .copy-btn {
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+    color: var(--muted); font-family: inherit;
+    transition: all 0.15s ease;
+  }
+  .copy-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .copy-btn.copied { background: #5d8a6b; color: white; border-color: #5d8a6b; }
+  .wiki-thumb {
+    float: right; max-width: 200px; max-height: 260px;
+    margin: 0 0 12px 20px;
+    border: 1px solid var(--border);
+    object-fit: cover;
+  }
+  .wiki-summary {
+    line-height: 1.7; color: var(--ink);
+    font-size: 0.98rem;
+  }
+  pre.json-block {
+    background: #2d2a26; color: #f5f1e8;
+    padding: 20px; overflow-x: auto;
+    font-size: 0.82rem; line-height: 1.5;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    margin: 0 0 12px;
+  }
+  .json-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .json-actions a, .json-actions button {
+    background: var(--paper); border: 1px solid var(--border);
+    color: var(--ink); text-decoration: none;
+    padding: 8px 16px; font-size: 0.88rem;
+    font-family: inherit; cursor: pointer;
+    display: inline-block;
+  }
+  .json-actions a:hover, .json-actions button:hover {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+  .error-state {
+    background: #fdf0f0; border-left: 4px solid var(--accent-2);
+    padding: 14px 18px; color: var(--muted);
+    font-size: 0.95rem; line-height: 1.5;
+  }
+  .back-link {
+    display: inline-block; color: var(--accent);
+    text-decoration: none; font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .back-link:hover { text-decoration: underline; }
+  @media (max-width: 600px) {
+    .wiki-thumb { float: none; max-width: 100%; margin: 0 0 16px; }
+    .data-row { grid-template-columns: 100px 1fr auto; gap: 8px; }
+    .tool-main { padding: 30px 16px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="top-inner">
+    <h1 class="brand"><a href="../" style="color:inherit;text-decoration:none;">❦ Il mio erbario</a></h1>
+    <nav class="top-nav"><span style="font-size:0.85rem;color:var(--muted);">Cerca specie</span></nav>
+  </div>
+</header>
+
+<main class="tool-main">
+  <a href="../" class="back-link">← Torna all'erbario</a>
+  <h2 class="tool-title">Cerca specie</h2>
+  <p class="tool-intro">Inserisci un nome scientifico. Lo strumento interroga <strong>GBIF</strong> per la classificazione tassonomica e <strong>Wikipedia</strong> per descrizione e immagine. Copia i dati che ti servono nel CMS, oppure usa il blocco JSON completo per incollarlo direttamente in <code>data/plants.json</code>.</p>
+
+  <div class="search-box">
+    <input type="text" id="query" placeholder="es. Echium wildpretii" autofocus />
+    <button id="search-btn">Cerca</button>
+  </div>
+
+  <div id="results" class="results"></div>
+</main>
+
+<script>
+// ==== CONFIGURAZIONE ====
+// Cambia questi valori se rinomini il repo o cambi username
+const GITHUB_USER = 'rubiscogreendesign-creator';
+const GITHUB_REPO = 'erbario';
+const GITHUB_BRANCH = 'main';
+
+const searchBtn = document.getElementById('search-btn');
+const queryInput = document.getElementById('query');
+const resultsDiv = document.getElementById('results');
+
+queryInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchBtn.click();
+});
+
+searchBtn.addEventListener('click', async () => {
+  const q = queryInput.value.trim();
+  if (!q) return;
+  searchBtn.disabled = true;
+  searchBtn.textContent = 'Ricerca…';
+  resultsDiv.className = 'results show';
+  resultsDiv.innerHTML = '<div class="loading-state">Interrogo GBIF e Wikipedia…</div>';
+
+  try {
+    const [gbif, wiki] = await Promise.all([
+      fetchGBIF(q),
+      fetchWikipedia(q)
+    ]);
+    renderResults(q, gbif, wiki);
+  } catch(e) {
+    resultsDiv.innerHTML = `<div class="error-state">Errore durante la ricerca: ${escapeHtml(e.message)}</div>`;
+  } finally {
+    searchBtn.disabled = false;
+    searchBtn.textContent = 'Cerca';
+  }
+});
+
+// ==== API ====
+
+async function fetchGBIF(name) {
+  // Prima chiamata: match per trovare la specie
+  const matchUrl = `https://api.gbif.org/v1/species/match?name=${encodeURIComponent(name)}`;
+  const matchResp = await fetch(matchUrl);
+  if (!matchResp.ok) throw new Error('GBIF match HTTP ' + matchResp.status);
+  const match = await matchResp.json();
+
+  // Seconda chiamata: ancestors per trovare sottofamiglia
+  if (match.usageKey) {
+    try {
+      const parentsResp = await fetch(`https://api.gbif.org/v1/species/${match.usageKey}/parents`);
+      if (parentsResp.ok) {
+        const parents = await parentsResp.json();
+        const subfamily = parents.find(p => p.rank === 'SUBFAMILY');
+        if (subfamily) match.subfamily = subfamily.canonicalName;
+        const tribe = parents.find(p => p.rank === 'TRIBE');
+        if (tribe) match.tribe = tribe.canonicalName;
+      }
+    } catch(e) { /* opzionale, ignora */ }
+  }
+  return match;
+}
+
+async function fetchWikipedia(name) {
+  const title = name.replace(/\s+/g, '_');
+  for (const lang of ['it', 'en', 'es']) {
+    try {
+      const resp = await fetch(
+        `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`,
+        { headers: { 'Accept': 'application/json' } }
+      );
+      if (!resp.ok) continue;
+      const data = await resp.json();
+      if (data.type === 'disambiguation') continue;
+      return { lang, ...data };
+    } catch(e) { /* prova la lingua successiva */ }
+  }
+  return null;
+}
+
+// ==== RENDERING ====
+
+function renderResults(query, gbif, wiki) {
+  const slug = slugify(query);
+  let html = '';
+
+  // ---- GBIF ----
+  if (gbif && gbif.matchType !== 'NONE' && gbif.family) {
+    html += `
+      <section class="result-section">
+        <h3>Tassonomia <small>GBIF · match ${gbif.matchType.toLowerCase()}, confidenza ${gbif.confidence || '–'}%</small></h3>
+        ${renderTaxRow('Regno', gbif.kingdom)}
+        ${renderTaxRow('Phylum', gbif.phylum)}
+        ${renderTaxRow('Classe', gbif.class)}
+        ${renderTaxRow('Ordine', gbif.order)}
+        ${renderTaxRow('Famiglia', gbif.family)}
+        ${renderTaxRow('Sottofamiglia', gbif.subfamily || '')}
+        ${renderTaxRow('Tribù', gbif.tribe || '')}
+        ${renderTaxRow('Genere', gbif.genus)}
+        ${renderTaxRow('Specie (epiteto)', gbif.species ? gbif.species.replace((gbif.genus || '') + ' ', '') : '')}
+        ${renderTaxRow('Nome accettato', gbif.canonicalName)}
+        ${renderTaxRow('Status', gbif.status, false)}
+      </section>
+    `;
+  } else {
+    html += `
+      <section class="result-section">
+        <h3>Tassonomia <small>GBIF</small></h3>
+        <div class="error-state">Nessuna corrispondenza su GBIF per "<em>${escapeHtml(query)}</em>". Controlla l'ortografia o compila i campi manualmente.</div>
+      </section>
+    `;
+  }
+
+  // ---- Wikipedia ----
+  if (wiki && wiki.extract) {
+    const thumb = wiki.thumbnail?.source;
+    const wikiTitle = (wiki.titles?.canonical) || (wiki.title || '').replace(/\s+/g, '_');
+    const sourceUrl = wiki.content_urls?.desktop?.page || '';
+    html += `
+      <section class="result-section">
+        <h3>Riepilogo <small>Wikipedia ${wiki.lang.toUpperCase()}</small></h3>
+        ${thumb ? `<img class="wiki-thumb" src="${thumb}" alt="${escapeAttr(wiki.title)}" />` : ''}
+        <p class="wiki-summary">${escapeHtml(wiki.extract)}</p>
+        <div style="clear:both;padding-top:14px;">
+          ${renderCopyRow('Titolo Wikipedia', wikiTitle)}
+          ${thumb ? renderCopyRow('URL immagine', thumb) : ''}
+          ${renderCopyRow('Testo aneddoto', wiki.extract, true)}
+          ${sourceUrl ? `<div class="data-row"><span class="data-label">Link articolo</span><span class="data-value"><a href="${sourceUrl}" target="_blank" rel="noopener" style="color:var(--accent);">${escapeHtml(sourceUrl)}</a></span><span></span></div>` : ''}
+        </div>
+      </section>
+    `;
+  } else {
+    html += `
+      <section class="result-section">
+        <h3>Riepilogo <small>Wikipedia</small></h3>
+        <div class="error-state">Nessuna pagina Wikipedia trovata per "<em>${escapeHtml(query)}</em>" in italiano, inglese o spagnolo. Prova varianti del nome o salta questo campo.</div>
+      </section>
+    `;
+  }
+
+  // ---- JSON block ----
+  const jsonObj = buildJsonObject(query, slug, gbif, wiki);
+  const jsonText = JSON.stringify(jsonObj, null, 2);
+  const githubEditUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/data/plants.json`;
+  html += `
+    <section class="result-section">
+      <h3>Blocco JSON pronto</h3>
+      <p style="color:var(--muted);font-size:0.92rem;margin:0 0 14px;">Se preferisci saltare il CMS: copia questo blocco e incollalo in <code>data/plants.json</code> dopo l'ultima scheda esistente (ricordati la virgola tra le due).</p>
+      <pre class="json-block" id="json-block">${escapeHtml(jsonText)}</pre>
+      <div class="json-actions">
+        <button onclick="copyJsonBlock()">📋 Copia il blocco JSON</button>
+        <a href="${githubEditUrl}" target="_blank" rel="noopener">📝 Apri plants.json su GitHub</a>
+      </div>
+    </section>
+  `;
+
+  resultsDiv.innerHTML = html;
+}
+
+function renderTaxRow(label, value, copyable = true) {
+  if (!value) return '';
+  return `
+    <div class="data-row">
+      <span class="data-label">${label}</span>
+      <span class="data-value"><em>${escapeHtml(value)}</em></span>
+      ${copyable ? `<button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button>` : '<span></span>'}
+    </div>
+  `;
+}
+
+function renderCopyRow(label, value, isLong = false) {
+  const display = isLong ? (value.length > 100 ? value.slice(0, 100) + '…' : value) : value;
+  return `
+    <div class="data-row">
+      <span class="data-label">${label}</span>
+      <span class="data-value" style="font-size:0.88rem;">${escapeHtml(display)}</span>
+      <button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button>
+    </div>
+  `;
+}
+
+function buildJsonObject(query, slug, gbif, wiki) {
+  return {
+    id: slug,
+    scientific_name: query,
+    common_names: [],
+    family: gbif?.family || '',
+    subfamily: gbif?.subfamily || '',
+    genus: gbif?.genus || '',
+    species: gbif?.species ? gbif.species.replace((gbif.genus || '') + ' ', '') : '',
+    images: [],
+    wikipedia_title: wiki?.titles?.canonical || (wiki ? query.replace(/\s+/g, '_') : ''),
+    origin: '',
+    notes: '',
+    anecdote: wiki?.extract || '',
+    tags: [],
+    date_added: new Date().toISOString().slice(0, 10)
+  };
+}
+
+function slugify(text) {
+  return text.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeAttr(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+}
+
+// Click delegato per tutti i bottoni "copia"
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('copy-btn') && e.target.dataset.copy !== undefined) {
+    const text = e.target.dataset.copy;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = e.target;
+      const old = btn.textContent;
+      btn.textContent = '✓ copiato';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = old;
+        btn.classList.remove('copied');
+      }, 1600);
+    }).catch(err => {
+      alert('Impossibile copiare: ' + err);
+    });
+  }
+});
+
+function copyJsonBlock() {
+  const text = document.getElementById('json-block').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('Blocco JSON copiato negli appunti. Incollalo in plants.json dopo l\'ultima scheda.');
+  });
+}
+</script>
+</body>
+</html>
