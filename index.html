@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Il mio erbario</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 
@@ -13,6 +12,7 @@
   <div class="top-inner">
     <h1 class="brand">❦ Il mio erbario</h1>
     <nav class="top-nav">
+      <a href="tools/lookup.html" class="nav-link">🔍 Cerca specie</a>
       <span id="count-display" class="count">—</span>
     </nav>
   </div>
@@ -35,18 +35,6 @@
   <p>Archivio personale · Costruito con dati versionati su GitHub</p>
 </footer>
 
-<script>
-// Reindirizzamento al pannello admin dopo il login via Netlify Identity
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on("init", user => {
-    if (!user) {
-      window.netlifyIdentity.on("login", () => {
-        document.location.href = "/admin/";
-      });
-    }
-  });
-}
-</script>
 <script src="app.js"></script>
 </body>
 </html>
