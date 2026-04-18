@@ -20,9 +20,7 @@
     font-family: inherit; color: var(--ink);
     border-radius: 0;
   }
-  .search-box input:focus {
-    outline: none; border-color: var(--accent);
-  }
+  .search-box input:focus { outline: none; border-color: var(--accent); }
   .search-box button {
     padding: 12px 28px; background: var(--accent); color: white;
     border: none; cursor: pointer; font-size: 0.95rem;
@@ -119,9 +117,59 @@
     margin-bottom: 20px;
   }
   .back-link:hover { text-decoration: underline; }
+
+  .edit-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 12px; align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--border);
+  }
+  .edit-row:last-of-type { border-bottom: none; }
+  .edit-row label {
+    font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted);
+    padding-top: 10px;
+  }
+  .edit-row input, .edit-row textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    font-family: 'Iowan Old Style', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    border-radius: 0;
+  }
+  .edit-row input:focus, .edit-row textarea:focus {
+    outline: none; border-color: var(--accent);
+    background: var(--paper);
+  }
+  .edit-row textarea { resize: vertical; min-height: 60px; }
+  .edit-hint {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin: 3px 0 0;
+    font-style: italic;
+  }
+  .suggested-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 6px;
+  }
+  .tag-pill {
+    background: var(--paper); border: 1px solid var(--border);
+    color: var(--muted); font-size: 0.72rem;
+    padding: 3px 10px; cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .tag-pill:hover, .tag-pill.added {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+  .tag-pill.added::before { content: "✓ "; }
+
   @media (max-width: 600px) {
     .wiki-thumb { float: none; max-width: 100%; margin: 0 0 16px; }
-    .data-row { grid-template-columns: 100px 1fr auto; gap: 8px; }
+    .data-row, .edit-row { grid-template-columns: 1fr; gap: 4px; }
     .tool-main { padding: 30px 16px 50px; }
   }
 </style>
@@ -138,7 +186,7 @@
 <main class="tool-main">
   <a href="../" class="back-link">← Torna all'erbario</a>
   <h2 class="tool-title">Cerca specie</h2>
-  <p class="tool-intro">Inserisci un nome scientifico. Lo strumento interroga <strong>GBIF</strong> per la classificazione tassonomica e <strong>Wikipedia</strong> per descrizione e immagine. Copia i dati che ti servono nel CMS, oppure usa il blocco JSON completo per incollarlo direttamente in <code>data/plants.json</code>.</p>
+  <p class="tool-intro">Inserisci un nome scientifico. Lo strumento interroga <strong>GBIF</strong> per la classificazione tassonomica e <strong>Wikipedia</strong> per descrizione e immagine. Copia i dati che ti servono, oppure personalizza qui sotto e usa il blocco JSON completo per incollarlo in <code>data/plants.json</code>.</p>
 
   <div class="search-box">
     <input type="text" id="query" placeholder="es. Echium wildpretii" autofocus />
@@ -149,19 +197,52 @@
 </main>
 
 <script>
-// ==== CONFIGURAZIONE ====
-// Cambia questi valori se rinomini il repo o cambi username
 const GITHUB_USER = 'rubiscogreendesign-creator';
 const GITHUB_REPO = 'erbario';
 const GITHUB_BRANCH = 'main';
+
+const TAG_KEYWORDS = [
+  ['endemic', 'endemica'], ['endemica', 'endemica'], ['endemico', 'endemica'],
+  ['epiphyt', 'epifita'], ['epifita', 'epifita'], ['epifit', 'epifita'],
+  ['succulent', 'succulenta'],
+  ['aromatic', 'aromatica'], ['aromatiche', 'aromatica'],
+  ['medicinal', 'medicinale'], ['officinal', 'officinale'],
+  ['invasive', 'invasiva'], ['invasiv', 'invasiva'],
+  ['biennial', 'biennale'], ['biennale', 'biennale'],
+  ['perennial', 'perenne'], ['perenne', 'perenne'],
+  [' annual', 'annuale'], ['annuale', 'annuale'],
+  ['ornamental', 'ornamentale'],
+  ['shrub', 'arbusto'], ['arbust', 'arbusto'],
+  ['tree ', 'albero'], ['alber', 'albero'],
+  ['climbing', 'rampicante'], ['rampicant', 'rampicante'],
+  ['aquatic', 'acquatica'], ['acquatic', 'acquatica'],
+  ['mediterranean', 'mediterraneo'], ['mediterrane', 'mediterraneo'],
+  ['tropical', 'tropicale'],
+  ['alpine', 'alpina'], ['alpin', 'alpina'],
+  ['desert', 'desertica'],
+  ['fragrant', 'profumata'], ['profumat', 'profumata'],
+  ['carnivor', 'carnivora'],
+  ['bulb', 'bulbosa'],
+  ['cactus', 'cactus'], ['cactac', 'cactus'],
+];
+
+const FAMILY_TAGS = {
+  'Orchidaceae': 'orchidea', 'Cactaceae': 'cactacea',
+  'Euphorbiaceae': 'euforbiacea', 'Poaceae': 'graminacea',
+  'Asteraceae': 'asteracea', 'Fabaceae': 'leguminosa',
+  'Lamiaceae': 'labiata', 'Rosaceae': 'rosacea',
+  'Solanaceae': 'solanacea', 'Brassicaceae': 'brassicacea',
+  'Apiaceae': 'ombrellifera', 'Liliaceae': 'liliacea',
+  'Bromeliaceae': 'bromeliacea',
+};
+
+let currentState = null;
 
 const searchBtn = document.getElementById('search-btn');
 const queryInput = document.getElementById('query');
 const resultsDiv = document.getElementById('results');
 
-queryInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') searchBtn.click();
-});
+queryInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchBtn.click(); });
 
 searchBtn.addEventListener('click', async () => {
   const q = queryInput.value.trim();
@@ -170,31 +251,21 @@ searchBtn.addEventListener('click', async () => {
   searchBtn.textContent = 'Ricerca…';
   resultsDiv.className = 'results show';
   resultsDiv.innerHTML = '<div class="loading-state">Interrogo GBIF e Wikipedia…</div>';
-
   try {
-    const [gbif, wiki] = await Promise.all([
-      fetchGBIF(q),
-      fetchWikipedia(q)
-    ]);
+    const [gbif, wiki] = await Promise.all([fetchGBIF(q), fetchWikipedia(q)]);
     renderResults(q, gbif, wiki);
   } catch(e) {
-    resultsDiv.innerHTML = `<div class="error-state">Errore durante la ricerca: ${escapeHtml(e.message)}</div>`;
+    resultsDiv.innerHTML = `<div class="error-state">Errore: ${escapeHtml(e.message)}</div>`;
   } finally {
     searchBtn.disabled = false;
     searchBtn.textContent = 'Cerca';
   }
 });
 
-// ==== API ====
-
 async function fetchGBIF(name) {
-  // Prima chiamata: match per trovare la specie
-  const matchUrl = `https://api.gbif.org/v1/species/match?name=${encodeURIComponent(name)}`;
-  const matchResp = await fetch(matchUrl);
-  if (!matchResp.ok) throw new Error('GBIF match HTTP ' + matchResp.status);
+  const matchResp = await fetch(`https://api.gbif.org/v1/species/match?name=${encodeURIComponent(name)}`);
+  if (!matchResp.ok) throw new Error('GBIF HTTP ' + matchResp.status);
   const match = await matchResp.json();
-
-  // Seconda chiamata: ancestors per trovare sottofamiglia
   if (match.usageKey) {
     try {
       const parentsResp = await fetch(`https://api.gbif.org/v1/species/${match.usageKey}/parents`);
@@ -205,7 +276,7 @@ async function fetchGBIF(name) {
         const tribe = parents.find(p => p.rank === 'TRIBE');
         if (tribe) match.tribe = tribe.canonicalName;
       }
-    } catch(e) { /* opzionale, ignora */ }
+    } catch(e) {}
   }
   return match;
 }
@@ -214,26 +285,35 @@ async function fetchWikipedia(name) {
   const title = name.replace(/\s+/g, '_');
   for (const lang of ['it', 'en', 'es']) {
     try {
-      const resp = await fetch(
-        `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`,
-        { headers: { 'Accept': 'application/json' } }
-      );
+      const resp = await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
       if (!resp.ok) continue;
       const data = await resp.json();
       if (data.type === 'disambiguation') continue;
       return { lang, ...data };
-    } catch(e) { /* prova la lingua successiva */ }
+    } catch(e) {}
   }
   return null;
 }
 
-// ==== RENDERING ====
+function suggestTags(gbif, wiki) {
+  const tags = new Set();
+  if (gbif?.family && FAMILY_TAGS[gbif.family]) tags.add(FAMILY_TAGS[gbif.family]);
+  if (wiki?.extract) {
+    const text = wiki.extract.toLowerCase();
+    for (const [kw, tag] of TAG_KEYWORDS) {
+      if (text.includes(kw)) tags.add(tag);
+    }
+  }
+  return Array.from(tags);
+}
 
 function renderResults(query, gbif, wiki) {
   const slug = slugify(query);
+  const suggestedTags = suggestTags(gbif, wiki);
+  currentState = { query, slug, gbif, wiki };
+
   let html = '';
 
-  // ---- GBIF ----
   if (gbif && gbif.matchType !== 'NONE' && gbif.family) {
     html += `
       <section class="result-section">
@@ -249,18 +329,11 @@ function renderResults(query, gbif, wiki) {
         ${renderTaxRow('Specie (epiteto)', gbif.species ? gbif.species.replace((gbif.genus || '') + ' ', '') : '')}
         ${renderTaxRow('Nome accettato', gbif.canonicalName)}
         ${renderTaxRow('Status', gbif.status, false)}
-      </section>
-    `;
+      </section>`;
   } else {
-    html += `
-      <section class="result-section">
-        <h3>Tassonomia <small>GBIF</small></h3>
-        <div class="error-state">Nessuna corrispondenza su GBIF per "<em>${escapeHtml(query)}</em>". Controlla l'ortografia o compila i campi manualmente.</div>
-      </section>
-    `;
+    html += `<section class="result-section"><h3>Tassonomia <small>GBIF</small></h3><div class="error-state">Nessuna corrispondenza GBIF per "<em>${escapeHtml(query)}</em>".</div></section>`;
   }
 
-  // ---- Wikipedia ----
   if (wiki && wiki.extract) {
     const thumb = wiki.thumbnail?.source;
     const wikiTitle = (wiki.titles?.canonical) || (wiki.title || '').replace(/\s+/g, '_');
@@ -276,94 +349,130 @@ function renderResults(query, gbif, wiki) {
           ${renderCopyRow('Testo aneddoto', wiki.extract, true)}
           ${sourceUrl ? `<div class="data-row"><span class="data-label">Link articolo</span><span class="data-value"><a href="${sourceUrl}" target="_blank" rel="noopener" style="color:var(--accent);">${escapeHtml(sourceUrl)}</a></span><span></span></div>` : ''}
         </div>
-      </section>
-    `;
+      </section>`;
   } else {
-    html += `
-      <section class="result-section">
-        <h3>Riepilogo <small>Wikipedia</small></h3>
-        <div class="error-state">Nessuna pagina Wikipedia trovata per "<em>${escapeHtml(query)}</em>" in italiano, inglese o spagnolo. Prova varianti del nome o salta questo campo.</div>
-      </section>
-    `;
+    html += `<section class="result-section"><h3>Riepilogo <small>Wikipedia</small></h3><div class="error-state">Nessuna pagina Wikipedia trovata per "<em>${escapeHtml(query)}</em>".</div></section>`;
   }
 
-  // ---- JSON block ----
-  const jsonObj = buildJsonObject(query, slug, gbif, wiki);
-  const jsonText = JSON.stringify(jsonObj, null, 2);
+  const suggestedHtml = suggestedTags.length
+    ? `<div class="suggested-tags" id="tag-suggestions">${suggestedTags.map(t => `<span class="tag-pill added" data-tag="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join('')}</div>
+       <p class="edit-hint">Tag suggeriti automaticamente. Clicca per rimuovere/ri-aggiungere, oppure scrivi altri nella casella.</p>`
+    : '<p class="edit-hint">Nessun tag suggerito. Scrivi i tuoi separati da virgola.</p>';
+
+  html += `
+    <section class="result-section">
+      <h3>Personalizza la scheda</h3>
+      <p style="color:var(--muted);font-size:0.92rem;margin:0 0 18px;">Compila qui per arricchire la scheda. Il blocco JSON qui sotto si aggiorna in tempo reale mentre scrivi.</p>
+
+      <div class="edit-row">
+        <label>Nomi comuni</label>
+        <div>
+          <input type="text" id="edit-common" placeholder="es. Salvia comune, Garden sage" value="" />
+          <p class="edit-hint">Separa più nomi con una virgola</p>
+        </div>
+      </div>
+
+      <div class="edit-row">
+        <label>Tag</label>
+        <div>
+          <input type="text" id="edit-tags" placeholder="es. mediterraneo, arbusto, perenne" value="${escapeAttr(suggestedTags.join(', '))}" />
+          ${suggestedHtml}
+        </div>
+      </div>
+
+      <div class="edit-row">
+        <label>Origine</label>
+        <div><input type="text" id="edit-origin" placeholder="es. Bacino mediterraneo" value="" /></div>
+      </div>
+
+      <div class="edit-row">
+        <label>Note personali</label>
+        <div><textarea id="edit-notes" placeholder="Tue osservazioni, dove l'hai vista, come sta andando in coltivazione..." rows="3"></textarea></div>
+      </div>
+    </section>`;
+
   const githubEditUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/data/plants.json`;
   html += `
     <section class="result-section">
       <h3>Blocco JSON pronto</h3>
-      <p style="color:var(--muted);font-size:0.92rem;margin:0 0 14px;">Se preferisci saltare il CMS: copia questo blocco e incollalo in <code>data/plants.json</code> dopo l'ultima scheda esistente (ricordati la virgola tra le due).</p>
-      <pre class="json-block" id="json-block">${escapeHtml(jsonText)}</pre>
+      <p style="color:var(--muted);font-size:0.92rem;margin:0 0 14px;">Copia e incolla in <code>data/plants.json</code> dopo l'ultima scheda (ricordati la virgola tra le due).</p>
+      <pre class="json-block" id="json-block"></pre>
       <div class="json-actions">
         <button onclick="copyJsonBlock()">📋 Copia il blocco JSON</button>
         <a href="${githubEditUrl}" target="_blank" rel="noopener">📝 Apri plants.json su GitHub</a>
       </div>
-    </section>
-  `;
+    </section>`;
 
   resultsDiv.innerHTML = html;
+
+  ['edit-common', 'edit-tags', 'edit-origin', 'edit-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', updateJsonFromInputs);
+  });
+
+  document.querySelectorAll('.tag-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const tag = pill.dataset.tag;
+      const input = document.getElementById('edit-tags');
+      const currentTags = input.value.split(',').map(t => t.trim()).filter(Boolean);
+      if (pill.classList.contains('added')) {
+        pill.classList.remove('added');
+        input.value = currentTags.filter(t => t !== tag).join(', ');
+      } else {
+        pill.classList.add('added');
+        if (!currentTags.includes(tag)) currentTags.push(tag);
+        input.value = currentTags.join(', ');
+      }
+      updateJsonFromInputs();
+    });
+  });
+
+  updateJsonFromInputs();
 }
 
-function renderTaxRow(label, value, copyable = true) {
-  if (!value) return '';
-  return `
-    <div class="data-row">
-      <span class="data-label">${label}</span>
-      <span class="data-value"><em>${escapeHtml(value)}</em></span>
-      ${copyable ? `<button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button>` : '<span></span>'}
-    </div>
-  `;
+function updateJsonFromInputs() {
+  if (!currentState) return;
+  const common = (document.getElementById('edit-common')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+  const tags = (document.getElementById('edit-tags')?.value || '').split(',').map(s => s.trim()).filter(Boolean);
+  const origin = document.getElementById('edit-origin')?.value || '';
+  const notes = document.getElementById('edit-notes')?.value || '';
+  const obj = buildJsonObject(currentState.query, currentState.slug, currentState.gbif, currentState.wiki, { common_names: common, tags, origin, notes });
+  const jsonEl = document.getElementById('json-block');
+  if (jsonEl) jsonEl.textContent = JSON.stringify(obj, null, 2);
 }
 
-function renderCopyRow(label, value, isLong = false) {
-  const display = isLong ? (value.length > 100 ? value.slice(0, 100) + '…' : value) : value;
-  return `
-    <div class="data-row">
-      <span class="data-label">${label}</span>
-      <span class="data-value" style="font-size:0.88rem;">${escapeHtml(display)}</span>
-      <button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button>
-    </div>
-  `;
-}
-
-function buildJsonObject(query, slug, gbif, wiki) {
+function buildJsonObject(query, slug, gbif, wiki, extras) {
   return {
     id: slug,
     scientific_name: query,
-    common_names: [],
+    common_names: extras.common_names || [],
     family: gbif?.family || '',
     subfamily: gbif?.subfamily || '',
     genus: gbif?.genus || '',
     species: gbif?.species ? gbif.species.replace((gbif.genus || '') + ' ', '') : '',
     images: [],
     wikipedia_title: wiki?.titles?.canonical || (wiki ? query.replace(/\s+/g, '_') : ''),
-    origin: '',
-    notes: '',
+    origin: extras.origin || '',
+    notes: extras.notes || '',
     anecdote: wiki?.extract || '',
-    tags: [],
+    tags: extras.tags || [],
     date_added: new Date().toISOString().slice(0, 10)
   };
 }
 
-function slugify(text) {
-  return text.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
+function renderTaxRow(label, value, copyable = true) {
+  if (!value) return '';
+  return `<div class="data-row"><span class="data-label">${label}</span><span class="data-value"><em>${escapeHtml(value)}</em></span>${copyable ? `<button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button>` : '<span></span>'}</div>`;
+}
+function renderCopyRow(label, value, isLong = false) {
+  const display = isLong ? (value.length > 100 ? value.slice(0, 100) + '…' : value) : value;
+  return `<div class="data-row"><span class="data-label">${label}</span><span class="data-value" style="font-size:0.88rem;">${escapeHtml(display)}</span><button class="copy-btn" data-copy="${escapeAttr(value)}">copia</button></div>`;
 }
 
-function escapeHtml(s) {
-  if (s == null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escapeAttr(s) {
-  if (s == null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-}
+function slugify(text) { return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+function escapeHtml(s) { if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escapeAttr(s) { if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;'); }
 
-// Click delegato per tutti i bottoni "copia"
 document.addEventListener('click', e => {
   if (e.target.classList.contains('copy-btn') && e.target.dataset.copy !== undefined) {
     const text = e.target.dataset.copy;
@@ -372,12 +481,7 @@ document.addEventListener('click', e => {
       const old = btn.textContent;
       btn.textContent = '✓ copiato';
       btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = old;
-        btn.classList.remove('copied');
-      }, 1600);
-    }).catch(err => {
-      alert('Impossibile copiare: ' + err);
+      setTimeout(() => { btn.textContent = old; btn.classList.remove('copied'); }, 1600);
     });
   }
 });
@@ -385,7 +489,7 @@ document.addEventListener('click', e => {
 function copyJsonBlock() {
   const text = document.getElementById('json-block').textContent;
   navigator.clipboard.writeText(text).then(() => {
-    alert('Blocco JSON copiato negli appunti. Incollalo in plants.json dopo l\'ultima scheda.');
+    alert('Blocco JSON copiato. Incollalo in plants.json dopo l\'ultima scheda.');
   });
 }
 </script>
