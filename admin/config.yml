@@ -1,0 +1,113 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+locale: "it"
+
+collections:
+  - name: erbario
+    label: "Erbario"
+    files:
+      - name: plants_file
+        label: "Piante"
+        file: "data/plants.json"
+        format: "json"
+        fields:
+          - label: "Ultimo aggiornamento"
+            name: updated
+            widget: datetime
+            date_format: "YYYY-MM-DD"
+            time_format: false
+            required: false
+
+          - label: "Piante"
+            name: plants
+            widget: list
+            summary: "{{fields.scientific_name}} — {{fields.family}}"
+            label_singular: "pianta"
+            fields:
+              - label: "ID (slug)"
+                name: id
+                widget: string
+                hint: "Identificatore unico in minuscolo con trattini, es: echium-wildpretii"
+
+              - label: "Nome scientifico"
+                name: scientific_name
+                widget: string
+
+              - label: "Nomi comuni"
+                name: common_names
+                widget: list
+                required: false
+                default: []
+                hint: "Premi enter dopo ogni nome per aggiungerlo alla lista"
+
+              - label: "Famiglia"
+                name: family
+                widget: string
+
+              - label: "Sottofamiglia"
+                name: subfamily
+                widget: string
+                required: false
+                default: ""
+
+              - label: "Genere"
+                name: genus
+                widget: string
+                required: false
+                default: ""
+
+              - label: "Specie (epiteto specifico)"
+                name: species
+                widget: string
+                required: false
+                default: ""
+
+              - label: "URL immagini"
+                name: images
+                widget: list
+                required: false
+                default: []
+                hint: "Lascia vuoto per caricare automaticamente da Wikipedia usando il campo sottostante"
+
+              - label: "Titolo pagina Wikipedia"
+                name: wikipedia_title
+                widget: string
+                required: false
+                default: ""
+                hint: "Es: Echium_wildpretii (con underscore al posto degli spazi)"
+
+              - label: "Origine"
+                name: origin
+                widget: string
+                required: false
+                default: ""
+
+              - label: "Note personali"
+                name: notes
+                widget: text
+                required: false
+                default: ""
+
+              - label: "Aneddoti / curiosità"
+                name: anecdote
+                widget: text
+                required: false
+                default: ""
+
+              - label: "Tag"
+                name: tags
+                widget: list
+                required: false
+                default: []
+
+              - label: "Data aggiunta"
+                name: date_added
+                widget: datetime
+                date_format: "YYYY-MM-DD"
+                time_format: false
+                required: false
