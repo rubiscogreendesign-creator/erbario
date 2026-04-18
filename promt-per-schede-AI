@@ -1,28 +1,4 @@
 ================================================================
-PROMPT — GENERATORE DI SCHEDE JSON PER IL MIO ERBARIO
-================================================================
-
-Come si usa
------------
-Copia TUTTO il contenuto di questo file in una nuova chat con Claude
-(o un altro modello AI). Nello spazio segnalato in fondo scrivi la
-lista delle piante che vuoi aggiungere. Il modello ti restituirà un
-singolo blocco JSON pronto da salvare come file dentro la cartella
-data/ del tuo repo erbario.
-
-Dopo aver ricevuto la risposta:
-1. Copia il JSON in un file di testo e salvalo con un nome
-   descrittivo, es. "plants-orchidee-coltivate.json" o
-   "plants-viaggio-canarie-2026.json".
-2. Carica il file nel repo, nella cartella data/, accanto a
-   plants.json (il tuo sito lo rileverà automaticamente e unirà le
-   schede).
-
-ATTENZIONE: scegli nomi file unici per ogni import. Se il file già
-esiste, GitHub lo sovrascrive.
-
-
-================================================================
 INIZIO DEL PROMPT — copia da qui in giù
 ================================================================
 
