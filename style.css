@@ -35,6 +35,25 @@ html, body {
   font-size: 1.4rem; font-weight: 400;
   margin: 0; color: var(--accent);
 }
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.nav-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.82rem;
+  padding: 7px 14px;
+  border: 1px solid var(--accent);
+  letter-spacing: 0.03em;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+.nav-link:hover {
+  background: var(--accent);
+  color: white;
+}
 .count {
   font-size: 0.85rem; color: var(--muted);
   font-variant-numeric: tabular-nums;
@@ -174,6 +193,161 @@ html, body {
   color: var(--muted); font-style: italic;
 }
 
+/* ===== Modal (vista dettaglio scheda) ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 42, 38, 0.75);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 100;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.modal-backdrop.show {
+  display: flex;
+  animation: modalFade 0.2s ease;
+}
+@keyframes modalFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal-content {
+  background: var(--paper);
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(45,42,38,0.3);
+  border: 1px solid var(--border);
+  animation: modalSlide 0.25s ease;
+}
+@keyframes modalSlide {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: rgba(255, 253, 247, 0.92);
+  border: 1px solid var(--border);
+  width: 38px; height: 38px;
+  font-size: 1.4rem; line-height: 1;
+  cursor: pointer;
+  color: var(--muted);
+  z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit;
+}
+.modal-close:hover {
+  background: var(--accent); color: white; border-color: var(--accent);
+}
+.modal-image {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+}
+.modal-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0; transition: opacity 0.4s;
+}
+.modal-image img.loaded { opacity: 1; }
+.modal-image .placeholder {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Didot', Georgia, serif;
+  font-size: 5rem; letter-spacing: 0.1em;
+}
+.modal-body {
+  padding: 32px 36px 36px;
+}
+.modal-title {
+  font-family: 'Didot', 'Bodoni 72', Georgia, serif;
+  font-size: 2rem; font-weight: 400;
+  font-style: italic;
+  margin: 0 0 6px; color: var(--ink);
+}
+.modal-common {
+  color: var(--accent-2);
+  font-style: italic;
+  font-size: 1.05rem;
+  margin: 0 0 20px;
+}
+.modal-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 0 0 24px;
+}
+.modal-section {
+  margin-bottom: 22px;
+}
+.modal-section h4 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin: 0 0 10px;
+  font-weight: 400;
+  font-family: inherit;
+}
+.modal-taxonomy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 24px;
+}
+.modal-tax-row {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px dotted var(--border);
+}
+.modal-tax-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  min-width: 92px;
+}
+.modal-tax-value {
+  font-family: inherit;
+  color: var(--ink);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+.modal-text {
+  line-height: 1.75;
+  color: var(--ink);
+  margin: 0;
+  font-size: 0.98rem;
+}
+.modal-links {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.modal-link {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  text-decoration: none;
+  padding: 9px 18px;
+  font-size: 0.85rem;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+.modal-link:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
 /* ===== Footer ===== */
 footer {
   text-align: center;
@@ -196,4 +370,13 @@ footer p { margin: 0 0 0.3em; }
   .family-name { font-size: 1.5rem; }
   .main { padding: 30px 16px 50px; }
   .top-inner { padding: 12px 16px; }
+  .nav-link { padding: 6px 10px; font-size: 0.76rem; }
+  .top-nav { gap: 10px; }
+
+  .modal-backdrop { padding: 0; }
+  .modal-content { max-height: 100vh; height: 100vh; border: none; }
+  .modal-image { height: 260px; }
+  .modal-body { padding: 24px 20px; }
+  .modal-taxonomy { grid-template-columns: 1fr; gap: 2px; }
+  .modal-title { font-size: 1.5rem; }
 }
