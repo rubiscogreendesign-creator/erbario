@@ -121,6 +121,26 @@
       ],
       "date_added": "2026-04-18",
       "quantity": 1
+    },
+    {
+      "id": "euphorbia-stygiana",
+      "scientific_name": "Euphorbia stygiana",
+      "common_names": [],
+      "family": "Euphorbiaceae",
+      "subfamily": "",
+      "genus": "Euphorbia",
+      "species": "stygiana",
+      "images": [],
+      "wikipedia_title": "Euphorbia_stygiana",
+      "origin": "",
+      "notes": "",
+      "anecdote": "Euphorbia stygiana is a species of evergreen shrub in the family Euphorbiaceae, endemic to several islands of the Azores. It has a critically endangered subspecies with only 20 known remaining mature individuals in the wild.",
+      "tags": [
+        "euforbiacea",
+        "endemica",
+        "arbusto"
+      ],
+      "date_added": "2026-04-18"
     }
   ]
 }
