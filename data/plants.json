@@ -1,0 +1,53 @@
+{
+  "updated": "2026-04-18",
+  "plants": [
+    {
+      "id": "echium-wildpretii",
+      "scientific_name": "Echium wildpretii",
+      "common_names": ["Tajinaste rojo", "Tower of jewels"],
+      "family": "Boraginaceae",
+      "subfamily": "",
+      "genus": "Echium",
+      "species": "wildpretii",
+      "images": [],
+      "wikipedia_title": "Echium_wildpretii",
+      "origin": "Tenerife, Parco nazionale del Teide",
+      "notes": "",
+      "anecdote": "Specie subalpina endemica del Teide. Produce una spettacolare torre di fiori rosso corallo alta fino a 3 metri, una sola volta nella vita.",
+      "tags": ["macaronesia", "biennale", "endemica"],
+      "date_added": "2026-04-18"
+    },
+    {
+      "id": "vanda-coerulea",
+      "scientific_name": "Vanda coerulea",
+      "common_names": ["Orchidea blu", "Blue Vanda"],
+      "family": "Orchidaceae",
+      "subfamily": "Epidendroideae",
+      "genus": "Vanda",
+      "species": "coerulea",
+      "images": [],
+      "wikipedia_title": "Vanda_coerulea",
+      "origin": "Assam, Myanmar settentrionale (foreste montane)",
+      "notes": "",
+      "anecdote": "Una delle pochissime orchidee con fiori veramente azzurri. Scoperta da William Griffith nel 1837, ha scatenato una delle più celebri cacce botaniche dell'Ottocento.",
+      "tags": ["orchidea", "epifita", "azzurra"],
+      "date_added": "2026-04-18"
+    },
+    {
+      "id": "euphorbia-characias",
+      "scientific_name": "Euphorbia characias",
+      "common_names": ["Euforbia cespugliosa", "Mediterranean spurge"],
+      "family": "Euphorbiaceae",
+      "subfamily": "Euphorbioideae",
+      "genus": "Euphorbia",
+      "species": "characias",
+      "images": [],
+      "wikipedia_title": "Euphorbia_characias",
+      "origin": "Bacino mediterraneo",
+      "notes": "",
+      "anecdote": "Cespuglio sempreverde con infiorescenze giallo-chartreuse a fine inverno. Due sottospecie: characias (nettari neri) e wulfenii (nettari gialli).",
+      "tags": ["mediterraneo", "arbusto", "sempreverde"],
+      "date_added": "2026-04-18"
+    }
+  ]
+}
