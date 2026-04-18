@@ -12,6 +12,7 @@
   <div class="top-inner">
     <h1 class="brand">❦ Il mio erbario</h1>
     <nav class="top-nav">
+      <a href="inventario.html" class="nav-link">📋 Inventario</a>
       <a href="tools/lookup.html" class="nav-link">🔍 Cerca specie</a>
       <span id="count-display" class="count">—</span>
     </nav>
@@ -25,6 +26,13 @@
     <p class="hero-intro">Un erbario digitale in costruzione. Ogni scheda raccoglie una pianta incontrata, coltivata o studiata, organizzata per famiglia botanica.</p>
   </div>
 </section>
+
+<div class="search-bar">
+  <div class="search-bar-inner">
+    <input type="search" id="search-filter-input" placeholder="Filtra per nome, famiglia, genere, tag, origine…" autocomplete="off" />
+    <button id="clear-filter-btn" class="clear-btn" style="display:none;" title="Azzera ricerca">×</button>
+  </div>
+</div>
 
 <main id="app" class="main">
   <div class="loading">Caricamento dell'erbario…</div>
