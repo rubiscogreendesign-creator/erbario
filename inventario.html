@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario · Il mio erbario</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .inv-main { max-width: 900px; margin: 0 auto; padding: 30px 20px 60px; }
+  .inv-title {
+    font-family: 'Didot', 'Bodoni 72', Georgia, serif;
+    font-size: 2rem; font-weight: 400;
+    color: var(--accent); margin: 0 0 8px;
+  }
+  .inv-subtitle { color: var(--muted); margin: 0 0 24px; font-style: italic; }
+
+  .inv-filter {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .inv-filter input {
+    width: 100%;
+    padding: 10px 40px 10px 14px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    font-family: inherit; font-size: 0.95rem;
+    color: var(--ink);
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+  .inv-filter input:focus { outline: none; border-color: var(--accent); }
+
+  .inv-global-status {
+    padding: 10px 14px;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--muted);
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    display: none;
+  }
+  .inv-global-status.show { display: block; }
+  .inv-global-status.success { border-left-color: var(--success); color: var(--success); background: #f3f9f5; }
+  .inv-global-status.error { border-left-color: var(--accent-2); color: var(--accent-2); background: #fdf2f2; }
+  .inv-global-status.saving { border-left-color: var(--accent); color: var(--accent); }
+
+  .inv-table {
+    width: 100%;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-collapse: collapse;
+    box-shadow: var(--shadow);
+  }
+  .inv-table th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    font-weight: normal;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .inv-table th:last-child { text-align: center; width: 180px; }
+  .inv-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .inv-table tr:last-child td { border-bottom: none; }
+  .inv-table tr.zero-qty { background: var(--bg); opacity: 0.55; }
+  .inv-table tr.zero-qty:hover { opacity: 0.85; }
+  .inv-table tr:hover { background: #fcfaf3; }
+  .inv-table tr.zero-qty:hover { background: var(--bg); }
+
+  .tbl-plant {
+    font-family: 'Didot', Georgia, serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .tbl-plant:hover { color: var(--accent); }
+  .tbl-common { color: var(--accent-2); font-size: 0.82rem; font-style: italic; display: block; margin-top: 2px; }
+  .tbl-family { color: var(--muted); font-size: 0.9rem; }
+
+  .tbl-qty-control {
+    display: flex; align-items: center; justify-content: center;
+    gap: 2px;
+  }
+  .tbl-qty-btn {
+    background: var(--bg); border: 1px solid var(--border);
+    width: 32px; height: 32px;
+    cursor: pointer; font-size: 1rem;
+    color: var(--ink); font-family: inherit;
+    transition: all 0.15s;
+  }
+  .tbl-qty-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+  .tbl-qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .tbl-qty-btn:disabled:hover { background: var(--bg); color: var(--ink); border-color: var(--border); }
+  .tbl-qty-num {
+    padding: 0 12px; min-width: 42px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    font-size: 1rem;
+  }
+  .tbl-remove-btn {
+    background: transparent; border: 1px solid transparent;
+    color: var(--muted);
+    font-size: 1.1rem; width: 32px; height: 32px;
+    cursor: pointer; margin-left: 8px;
+    transition: all 0.15s;
+  }
+  .tbl-remove-btn:hover { color: var(--accent-2); border-color: var(--accent-2); }
+
+  .empty-inv { text-align: center; padding: 60px 20px; color: var(--muted); font-style: italic; }
+  .empty-inv p { margin: 0 0 12px; }
+  .empty-inv a { color: var(--accent); }
+
+  .token-warning {
+    background: #fff8e8; border-left: 4px solid var(--accent-2);
+    padding: 14px 18px; margin-bottom: 20px;
+    color: var(--muted); font-size: 0.92rem;
+  }
+  .token-warning a { color: var(--accent); font-weight: 500; }
+
+  .total-summary {
+    text-align: right; color: var(--muted);
+    font-size: 0.85rem; margin-top: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 600px) {
+    .inv-main { padding: 20px 12px 50px; }
+    .inv-table th:first-child, .inv-table td:first-child { padding-left: 10px; }
+    .inv-table th:last-child { width: 140px; }
+    .tbl-family { display: none; }
+    .inv-title { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="top-inner">
+    <h1 class="brand"><a href="./">❦ Il mio erbario</a></h1>
+    <nav class="top-nav">
+      <a href="./" class="nav-link">← Archivio</a>
+      <a href="tools/lookup.html" class="nav-link">🔍 Cerca specie</a>
+    </nav>
+  </div>
+</header>
+
+<main class="inv-main">
+  <h2 class="inv-title">Il mio inventario</h2>
+  <p class="inv-subtitle">Piante che possiedo, in ordine alfabetico. Modifica le quantità con i pulsanti; i cambiamenti si salvano da soli dopo un istante.</p>
+
+  <div id="token-warning" class="token-warning" style="display:none;">
+    ⚠️ Token GitHub non configurato. Non potrai modificare le quantità finché non lo imposti. <a href="tools/lookup.html">Vai su Cerca specie → ⚙️ Token</a>.
+  </div>
+
+  <div id="inv-status" class="inv-global-status"></div>
+
+  <div class="inv-filter">
+    <input type="search" id="filter" placeholder="Filtra inventario…" autocomplete="off" />
+  </div>
+
+  <div id="inv-content">
+    <div class="empty-inv">Caricamento inventario…</div>
+  </div>
+</main>
+
+<footer>
+  <p class="ornament">❦</p>
+  <p>Archivio personale · Costruito con dati versionati su GitHub</p>
+</footer>
+
+<script>
+const GITHUB_USER = 'rubiscogreendesign-creator';
+const GITHUB_REPO = 'erbario';
+const GITHUB_BRANCH = 'main';
+const TOKEN_KEY = 'erbario_github_token';
+
+function getToken() { return localStorage.getItem(TOKEN_KEY); }
+function escapeHtml(s) { if (s == null) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function normalizeSearch(t) { return (t || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+let allInventory = [];
+
+// Mostra/nasconde avviso token
+if (!getToken()) document.getElementById('token-warning').style.display = 'block';
+
+function setGlobalStatus(kind, text) {
+  const el = document.getElementById('inv-status');
+  el.className = 'inv-global-status show ' + kind;
+  el.textContent = text;
+  if (kind === 'success') setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+async function discoverDataFiles() {
+  try {
+    const resp = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data?ref=${GITHUB_BRANCH}`);
+    if (resp.ok) {
+      const list = await resp.json();
+      return list.filter(f => f.type === 'file' && f.name.endsWith('.json') && !f.name.startsWith('_'))
+                 .map(f => 'data/' + f.name);
+    }
+  } catch(e) {}
+  return ['data/plants.json'];
+}
+
+async function loadAllPlants() {
+  const files = await discoverDataFiles();
+  const plants = [];
+  const seen = new Set();
+  for (const f of files) {
+    try {
+      const r = await fetch(f + '?t=' + Date.now());
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d.plants) {
+        for (const p of d.plants) {
+          if (!p.id || seen.has(p.id)) continue;
+          seen.add(p.id);
+          p._source_file = f;
+          plants.push(p);
+        }
+      }
+    } catch(e) {}
+  }
+  return plants;
+}
+
+function render() {
+  const container = document.getElementById('inv-content');
+  const filter = normalizeSearch(document.getElementById('filter').value);
+
+  // Solo piante in inventario, ordinate alfabeticamente
+  let inv = allInventory
+    .filter(p => p.quantity !== undefined)
+    .sort((a, b) => a.scientific_name.localeCompare(b.scientific_name));
+
+  // Filtro testo
+  if (filter) {
+    const tokens = filter.split(/\s+/).filter(Boolean);
+    inv = inv.filter(p => {
+      const hay = [p.scientific_name, (p.common_names || []).join(' '), p.family, p.genus, (p.tags || []).join(' ')]
+        .filter(Boolean).map(normalizeSearch).join(' ');
+      return tokens.every(t => hay.includes(t));
+    });
+  }
+
+  if (inv.length === 0) {
+    container.innerHTML = `
+      <div class="empty-inv">
+        ${allInventory.filter(p => p.quantity !== undefined).length === 0
+          ? '<p>Ancora nessuna pianta nell\'inventario.</p><p>Vai nell\'<a href="./">archivio</a>, apri una scheda e clicca <strong>+ Aggiungi al mio inventario</strong>.</p>'
+          : '<p>Nessuna pianta corrisponde al filtro.</p>'}
+      </div>`;
+    return;
+  }
+
+  const totalCount = inv.reduce((s, p) => s + (p.quantity > 0 ? p.quantity : 0), 0);
+  const uniqueCount = inv.filter(p => p.quantity > 0).length;
+
+  let html = `
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>Pianta</th>
+          <th>Famiglia</th>
+          <th>Quantità</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  for (const p of inv) {
+    const commons = (p.common_names && p.common_names.length) ? p.common_names.join(', ') : '';
+    const zeroClass = p.quantity === 0 ? 'zero-qty' : '';
+    html += `
+      <tr class="${zeroClass}" data-id="${escapeHtml(p.id)}">
+        <td>
+          <a class="tbl-plant" href="./#family-${escapeHtml(p.family || '').toLowerCase()}">${escapeHtml(p.scientific_name)}</a>
+          ${commons ? `<span class="tbl-common">${escapeHtml(commons)}</span>` : ''}
+        </td>
+        <td><span class="tbl-family">${escapeHtml(p.family || '—')}</span></td>
+        <td>
+          <div class="tbl-qty-control">
+            <button class="tbl-qty-btn minus" ${p.quantity <= 0 ? 'disabled' : ''}>−</button>
+            <span class="tbl-qty-num">${p.quantity}</span>
+            <button class="tbl-qty-btn plus">+</button>
+            <button class="tbl-remove-btn" title="Rimuovi dall'inventario">×</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+  html += `</tbody></table>
+    <p class="total-summary">${uniqueCount} specie attive · ${totalCount} esemplari totali</p>`;
+  container.innerHTML = html;
+
+  // Attach handlers
+  container.querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = tr.dataset.id;
+    const plant = allInventory.find(p => p.id === id);
+    if (!plant) return;
+    const minus = tr.querySelector('.minus');
+    const plus = tr.querySelector('.plus');
+    const remove = tr.querySelector('.tbl-remove-btn');
+    const num = tr.querySelector('.tbl-qty-num');
+
+    let timer = null;
+    function schedule(newQty) {
+      plant.quantity = newQty;
+      num.textContent = newQty;
+      tr.classList.toggle('zero-qty', newQty === 0);
+      minus.disabled = newQty <= 0;
+      clearTimeout(timer);
+      setGlobalStatus('saving', `Salvando ${plant.scientific_name}…`);
+      timer = setTimeout(() => commitQuantity(plant, newQty), 900);
+    }
+
+    minus.addEventListener('click', () => { if (plant.quantity > 0) schedule(plant.quantity - 1); });
+    plus.addEventListener('click', () => schedule(plant.quantity + 1));
+    remove.addEventListener('click', async () => {
+      if (!confirm(`Rimuovere ${plant.scientific_name} dall'inventario?`)) return;
+      clearTimeout(timer);
+      setGlobalStatus('saving', `Rimozione ${plant.scientific_name}…`);
+      try {
+        await commitQuantity(plant, '__DELETE__');
+        delete plant.quantity;
+        render();
+      } catch(e) {
+        setGlobalStatus('error', 'Errore: ' + describeErr(e));
+      }
+    });
+  });
+}
+
+async function commitQuantity(plant, newQty) {
+  const token = getToken();
+  if (!token) {
+    setGlobalStatus('error', 'Token non configurato. Configura in Cerca specie → ⚙️ Token.');
+    throw new Error('no token');
+  }
+  try {
+    const file = plant._source_file || 'data/plants.json';
+    const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${file}?ref=${GITHUB_BRANCH}`;
+    const fetchResp = await fetch(apiUrl, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+    });
+    if (!fetchResp.ok) throw new Error('HTTP ' + fetchResp.status);
+    const data = await fetchResp.json();
+    const content = JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
+    const idx = content.plants.findIndex(p => p.id === plant.id);
+    if (idx === -1) throw new Error('scheda non trovata');
+    if (newQty === '__DELETE__') {
+      delete content.plants[idx].quantity;
+    } else {
+      content.plants[idx].quantity = newQty;
+    }
+    content.updated = new Date().toISOString().slice(0, 10);
+    const jsonStr = JSON.stringify(content, null, 2) + '\n';
+    const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+    const w = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${file}`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `Inventario: ${plant.scientific_name} → ${newQty === '__DELETE__' ? 'rimosso' : 'quantità ' + newQty}`,
+        content: base64, sha: data.sha, branch: GITHUB_BRANCH
+      })
+    });
+    if (!w.ok) throw new Error('HTTP ' + w.status);
+    setGlobalStatus('success', `Salvato: ${plant.scientific_name}`);
+  } catch(e) {
+    setGlobalStatus('error', 'Errore: ' + describeErr(e));
+    throw e;
+  }
+}
+
+function describeErr(e) {
+  const msg = e.message || String(e);
+  if (msg.includes('401')) return 'token non valido, riconfigura.';
+  if (msg.includes('403')) return 'permessi insufficienti del token.';
+  if (msg.includes('409')) return 'conflitto, ricarica e riprova.';
+  return msg;
+}
+
+document.getElementById('filter').addEventListener('input', render);
+
+loadAllPlants().then(plants => {
+  allInventory = plants;
+  render();
+}).catch(err => {
+  document.getElementById('inv-content').innerHTML =
+    `<div class="empty-inv">Errore nel caricamento: ${escapeHtml(err.message)}</div>`;
+});
+</script>
+</body>
+</html>
