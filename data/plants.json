@@ -101,6 +101,25 @@
       "anecdote": "Phalaenopsis mannii Rchb.f., 1871 è una pianta della famiglia delle Orchidacee originaria dell'Asia sudorientale.",
       "tags": [],
       "date_added": "2026-04-18"
+    },
+    {
+      "id": "euphorbia-dendroides",
+      "scientific_name": "euphorbia dendroides",
+      "common_names": [],
+      "family": "Euphorbiaceae",
+      "subfamily": "",
+      "genus": "Euphorbia",
+      "species": "dendroides",
+      "images": [],
+      "wikipedia_title": "Euphorbia_dendroides",
+      "origin": "",
+      "notes": "",
+      "anecdote": "L'euforbia arborea è una pianta della famiglia Euphorbiacee, comune negli ambienti di macchia mediterranea.",
+      "tags": [
+        "euforbiacea",
+        "mediterraneo"
+      ],
+      "date_added": "2026-04-18"
     }
   ]
 }
