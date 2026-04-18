@@ -85,6 +85,22 @@
       "anecdote": "La salvia comune è una piccola pianta perenne erbacea aromatica dai delicati fiori labiati appartenente alla famiglia delle Lamiacee.",
       "tags": [],
       "date_added": "2026-04-18"
+    },
+    {
+      "id": "phalaenopsis-mannii",
+      "scientific_name": "Phalaenopsis mannii",
+      "common_names": [],
+      "family": "Orchidaceae",
+      "subfamily": "",
+      "genus": "Phalaenopsis",
+      "species": "mannii",
+      "images": [],
+      "wikipedia_title": "Phalaenopsis_mannii",
+      "origin": "",
+      "notes": "",
+      "anecdote": "Phalaenopsis mannii Rchb.f., 1871 è una pianta della famiglia delle Orchidacee originaria dell'Asia sudorientale.",
+      "tags": [],
+      "date_added": "2026-04-18"
     }
   ]
 }
