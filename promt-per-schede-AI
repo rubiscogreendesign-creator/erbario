@@ -1,0 +1,201 @@
+================================================================
+PROMPT — GENERATORE DI SCHEDE JSON PER IL MIO ERBARIO
+================================================================
+
+Come si usa
+-----------
+Copia TUTTO il contenuto di questo file in una nuova chat con Claude
+(o un altro modello AI). Nello spazio segnalato in fondo scrivi la
+lista delle piante che vuoi aggiungere. Il modello ti restituirà un
+singolo blocco JSON pronto da salvare come file dentro la cartella
+data/ del tuo repo erbario.
+
+Dopo aver ricevuto la risposta:
+1. Copia il JSON in un file di testo e salvalo con un nome
+   descrittivo, es. "plants-orchidee-coltivate.json" o
+   "plants-viaggio-canarie-2026.json".
+2. Carica il file nel repo, nella cartella data/, accanto a
+   plants.json (il tuo sito lo rileverà automaticamente e unirà le
+   schede).
+
+ATTENZIONE: scegli nomi file unici per ogni import. Se il file già
+esiste, GitHub lo sovrascrive.
+
+
+================================================================
+INIZIO DEL PROMPT — copia da qui in giù
+================================================================
+
+Sei un botanico. Ti chiedo di generare un file JSON con schede di
+piante nel mio formato esatto, pronto a essere caricato come
+data/plants-xxx.json nel mio repository GitHub dell'erbario
+personale.
+
+FORMATO DEL FILE:
+
+{
+  "updated": "YYYY-MM-DD",
+  "plants": [
+    { ... scheda 1 ... },
+    { ... scheda 2 ... },
+    ...
+  ]
+}
+
+FORMATO DI UNA SINGOLA SCHEDA:
+
+{
+  "id": "identificatore-unico-slug",
+  "scientific_name": "Genere specie",
+  "common_names": ["Nome 1", "Nome 2"],
+  "family": "Famiglia",
+  "subfamily": "Sottofamiglia",
+  "genus": "Genere",
+  "species": "epiteto",
+  "images": [],
+  "wikipedia_title": "Genere_specie",
+  "origin": "Area di origine",
+  "notes": "",
+  "anecdote": "Testo di 2-4 frasi...",
+  "tags": ["tag1", "tag2"],
+  "date_added": "YYYY-MM-DD"
+}
+
+REGOLE DI NORMALIZZAZIONE (tutte obbligatorie):
+
+1. id: slug lowercase con trattini, solo ASCII, senza accenti né
+   caratteri speciali.
+   - "Echium wildpretii" → "echium-wildpretii"
+   - "Salvia × nemorosa 'Caradonna'" → "salvia-nemorosa-caradonna"
+   - "Paphiopedilum concolor" → "paphiopedilum-concolor"
+
+2. scientific_name: binomiale standard, iniziale maiuscola del
+   genere, specie minuscolo.
+   - "Echium wildpretii"
+   - "Salvia officinalis"
+   Per ibridi con × (simbolo, non x):
+   - "Echium × scilloniense"
+   - "Salvia × nemorosa"
+   Per cultivar, aggiungi il nome in apici singoli:
+   - "Heuchera 'Palace Purple'"
+
+3. common_names: array di stringhe. Priorità: nomi italiani prima,
+   poi inglesi, poi nella lingua d'origine (spagnolo per piante
+   canarie, portoghese per piante di Madeira, ecc.). Se non
+   conosci nomi comuni certi, lascia array vuoto [].
+
+4. family: iniziale maiuscola, nome scientifico attualmente
+   accettato secondo APG IV per le angiosperme.
+   - "Boraginaceae", "Orchidaceae", "Euphorbiaceae", "Lamiaceae"
+
+5. subfamily: iniziale maiuscola, nome attualmente accettato.
+   Se non conosci o non è definita, stringa vuota "".
+   - "Epidendroideae" (Orchidaceae), "Nepetoideae" (Lamiaceae),
+     "Euphorbioideae" (Euphorbiaceae)
+
+6. genus: iniziale maiuscola, stesso del scientific_name.
+
+7. species: SOLO l'epiteto specifico, minuscolo.
+   - Se il scientific_name è "Echium wildpretii", species è
+     "wildpretii"
+   - Se è un ibrido tipo "Salvia × nemorosa", species è
+     "× nemorosa" (mantieni il ×)
+
+8. images: SEMPRE array vuoto []. Le foto saranno recuperate da
+   Wikipedia a runtime dall'applicazione.
+
+9. wikipedia_title: titolo esatto della pagina Wikipedia, con
+   UNDERSCORE al posto degli spazi. Priorità: inglese prima,
+   altrimenti italiano, altrimenti spagnolo. Se la pagina non
+   esiste in nessuna di queste lingue, scrivi comunque il nome
+   scientifico con underscore: l'app mostrerà il placeholder.
+   - "Echium_wildpretii"
+   - "Salvia_officinalis"
+   - "Paphiopedilum_concolor"
+   Per ibridi: "Salvia_×_nemorosa" (spazio+×+spazio al posto del ×).
+
+10. origin: descrizione geografica/ecologica breve (5-15 parole,
+    massimo 20). Usa italiano. Indica la provenienza naturale, non
+    dove è coltivata.
+    - "Tenerife, Parco nazionale del Teide (alta quota)"
+    - "Bacino mediterraneo centro-occidentale"
+    - "Foreste montane dell'Assam e del Myanmar"
+    - "Coste atlantiche e mediterranee"
+
+11. notes: SEMPRE stringa vuota "". È riservato alle note
+    personali che l'utente aggiungerà a mano.
+
+12. anecdote: testo in italiano, 2-4 frasi in PROSA (niente elenchi
+    puntati). Descrive cosa rende interessante la pianta: tratti
+    distintivi, habitat, curiosità etnobotaniche o storiche,
+    comportamento in coltivazione. Tono divulgativo colto, non
+    accademico. Se hai informazioni scarse o incerte, meglio una
+    frase sola ben fatta che due frasi generiche. Se non hai
+    proprio nulla di specifico, scrivi stringa vuota "".
+
+13. tags: array di stringhe in italiano, minuscolo. Scegli 2-5 tag
+    pertinenti dalla lista seguente (puoi inventarne altri se ha
+    senso, ma preferisci questi standard):
+
+    Forma vitale:
+    - annuale, biennale, perenne
+    - arbusto, albero, erbacea, rampicante, suffruticosa,
+      bulbosa, rizomatosa
+
+    Fisiologia/morfologia:
+    - succulenta, carnivora, epifita, cactacea, orchidea,
+      graminacea
+
+    Ecologia / biogeografia:
+    - endemica, mediterraneo, tropicale, alpina, desertica,
+      acquatica, psammofila, ruderale
+
+    Uso umano:
+    - aromatica, medicinale, officinale, ornamentale, commestibile
+
+    Status:
+    - invasiva, a rischio, protetta
+
+14. date_added: data di oggi in formato YYYY-MM-DD. Usa l'attuale
+    data reale del giorno in cui generi il JSON.
+
+OUTPUT ATTESO:
+
+Restituisci UN SOLO blocco di codice JSON valido, nient'altro —
+nessuna introduzione, nessuna spiegazione, nessun commento, nessun
+markdown prima o dopo il JSON. Il tuo output deve iniziare con "{"
+e terminare con "}". Deve essere direttamente copiabile e
+incollabile in un file .json.
+
+Verifica prima di rispondere che:
+- Ogni virgola sia al posto giusto (nessuna virgola dopo l'ultima
+  scheda dell'array)
+- Ogni stringa sia tra virgolette doppie
+- Ogni "quote" italiana nel testo sia scritta correttamente come
+  " dritta, non curva
+- Tutti gli id siano univoci nell'array
+- Gli oggetti abbiano tutti i campi richiesti nell'ordine indicato
+
+
+================================================================
+LISTA DELLE PIANTE DA INCLUDERE
+================================================================
+
+Qui sotto scrivi la tua lista. Formato libero, una pianta per riga.
+Puoi indicare solo il nome scientifico, o aggiungere note tra
+parentesi che l'AI userà come contesto (es. "coltivata in giardino",
+"vista in vivaio", "regalo", "morta").
+
+Esempi:
+  - Rosa canina
+  - Salvia officinalis (coltivata in giardino)
+  - Lavandula angustifolia 'Hidcote'
+  - Tulipa sylvestris (prato del parco)
+  - Orchis italica (osservata in Puglia)
+
+LA TUA LISTA (cancella questa riga e scrivi sotto):
+
+
+================================================================
+FINE DEL PROMPT
+================================================================
