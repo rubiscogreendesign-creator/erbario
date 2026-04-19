@@ -279,6 +279,27 @@
         "annuale"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "aethionema-grandiflorum",
+      "scientific_name": "Aethionema grandiflorum",
+      "common_names": [],
+      "family": "Brassicaceae",
+      "subfamily": "",
+      "genus": "Aethionema",
+      "species": "grandiflorum",
+      "images": [],
+      "wikipedia_title": "Aethionema_grandiflorum",
+      "origin": "Turchia",
+      "notes": "pianta perenne sempreverde molto apprezzata per i giardini rocciosi. Richiede il pieno sole per mantenere una forma compatta e fiorire generosamente. ama i suoli alcalini.",
+      "anecdote": "Aethionema grandiflorum, commonly known as Persian stonecress or Persian candytuft, is a flowering plant in the family Brassicaceae, preferring to grow at 750 to 2600 m on limestone slopes. It is sometimes kept as a garden plant, and occasionally naturalizes outside its original range of eastern Turkey, the southern Caucasus and northern Iran. It is a recipient of the RHS's Award of Garden Merit.",
+      "tags": [
+        "brassicacea",
+        "perenne",
+        "terreno drenante",
+        "alcalino"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
