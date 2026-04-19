@@ -140,6 +140,26 @@
         "arbusto"
       ],
       "date_added": "2026-04-18"
+    },
+    {
+      "id": "euphorbia-hypericifolia",
+      "scientific_name": "euphorbia hypericifolia",
+      "common_names": [],
+      "family": "Euphorbiaceae",
+      "subfamily": "",
+      "genus": "Euphorbia",
+      "species": "hypericifolia",
+      "images": [],
+      "wikipedia_title": "Euphorbia_hypericifolia",
+      "origin": "",
+      "notes": "",
+      "anecdote": "Euphorbia hypericifolia is a species of perennial herb in the genus Euphorbia native to tropical Americas. It normally grows up to 2 feet (0.6 m) in height, and contains milky sap which can cause skin and eye irritation.",
+      "tags": [
+        "euforbiacea",
+        "perenne",
+        "tropicale"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
