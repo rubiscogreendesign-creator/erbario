@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-18",
+  "updated": "2026-04-19",
   "plants": [
     {
       "scientific_name": "Echium wildpretii",
@@ -119,8 +119,7 @@
         "euforbiacea",
         "mediterraneo"
       ],
-      "date_added": "2026-04-18",
-      "quantity": 1
+      "date_added": "2026-04-18"
     },
     {
       "id": "euphorbia-stygiana",
