@@ -197,6 +197,27 @@
         "rustica"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "iberis-sempervirens",
+      "scientific_name": "Iberis sempervirens",
+      "common_names": [],
+      "family": "Brassicaceae",
+      "subfamily": "",
+      "genus": "Iberis",
+      "species": "sempervirens",
+      "images": [],
+      "wikipedia_title": "Iberis_sempervirens",
+      "origin": "",
+      "notes": "Forma cuscini compatti e tappezzanti, alti solitamente 20-30 cm, con fioritura primaverile.",
+      "anecdote": "Iberis sempervirens, the evergreen candytuft or perennial candytuft, is a species of flowering plant in the family Brassicaceae, native to southern Europe. The species is often used as an ornamental garden shrub because of its decorative flowers. Iberis is so named because many members of the genus come from the Iberian Peninsula in south west Europe. Sempervirens means \"always green\", referring to the evergreen foliage.",
+      "tags": [
+        "brassicacea",
+        "perenne",
+        "ornamentale",
+        "arbusto"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
