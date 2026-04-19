@@ -258,6 +258,27 @@
         "brevi gelate"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "eschscholzia-californica",
+      "scientific_name": "Eschscholzia californica",
+      "common_names": [],
+      "family": "Papaveraceae",
+      "subfamily": "",
+      "genus": "Eschscholzia",
+      "species": "californica",
+      "images": [],
+      "wikipedia_title": "Eschscholzia_californica",
+      "origin": "Nord America",
+      "notes": "Cresce spontaneamente in terreni aridi, sabbiosi e soleggiati, spesso ricoprendo intere colline con le sue spettacolari fioriture arancioni.\nFu introdotta in Europa nel XIX secolo come pianta ornamentale grazie al botanico tedesco Johann Friedrich von Eschscholtz, da cui prende il nome scientifico.",
+      "anecdote": "Eschscholzia californica, the California poppy, golden poppy, Mexican poppy, California sunlight or cup of gold, is a species of flowering plant in the family Papaveraceae, native to the United States and Mexico. It is cultivated as an ornamental plant flowering in summer, with showy flowers in brilliant shades of red, orange and yellow. It is also used as food or a garnish. It had various uses in indigenous herbalism. It became the official state flower of California in 1903.",
+      "tags": [
+        "ornamentale",
+        "auto semina",
+        "rustica",
+        "annuale"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
