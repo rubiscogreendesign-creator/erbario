@@ -160,6 +160,24 @@
         "tropicale"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "liriodendron-tulipifera",
+      "scientific_name": "Liriodendron tulipifera",
+      "common_names": [],
+      "family": "Magnoliaceae",
+      "subfamily": "",
+      "genus": "Liriodendron",
+      "species": "tulipifera",
+      "images": [],
+      "wikipedia_title": "Liriodendron_tulipifera",
+      "origin": "",
+      "notes": "",
+      "anecdote": "Liriodendron tulipifera L., 1753 è un albero della famiglia delle Magnoliacee, noto come albero dei tulipani o anche tulipier, italianizzato in tulipifero.",
+      "tags": [
+        "albero"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
