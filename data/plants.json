@@ -178,6 +178,25 @@
         "albero"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "scilla-peruviana",
+      "scientific_name": "Scilla peruviana",
+      "common_names": [],
+      "family": "Asparagaceae",
+      "subfamily": "",
+      "genus": "Scilla",
+      "species": "peruviana",
+      "images": [],
+      "wikipedia_title": "Scilla_peruviana",
+      "origin": "Bacino del Mediterraneo",
+      "notes": "",
+      "anecdote": "La scilla maggiore è una pianta della famiglia delle Asparagacee, diffusa nel bacino del Mediterraneo.",
+      "tags": [
+        "mediterraneo",
+        "rustica"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
