@@ -238,6 +238,26 @@
         "arbusto"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "convolvulus-cneorum",
+      "scientific_name": "Convolvulus cneorum",
+      "common_names": [],
+      "family": "Convolvulaceae",
+      "subfamily": "",
+      "genus": "Convolvulus",
+      "species": "cneorum",
+      "images": [],
+      "wikipedia_title": "Convolvulus_cneorum",
+      "origin": "",
+      "notes": "Arbusto a portamento compatto, è apprezzato per il suo fogliame argenteo e persistente, che mantiene il suo colore caratteristico tutto l'anno.",
+      "anecdote": "Il vilucchio turco è una pianta appartenente alla famiglia delle Convolvulacee, a distribuzione mediterranea.",
+      "tags": [
+        "mediterraneo",
+        "semi-arbustivo",
+        "brevi gelate"
+      ],
+      "date_added": "2026-04-19"
     }
   ]
 }
