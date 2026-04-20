@@ -358,6 +358,25 @@
         "Tropicale"
       ],
       "date_added": "2026-04-20"
+    },
+    {
+      "id": "clerodendrum-thomsoniae",
+      "scientific_name": "Clerodendrum thomsoniae",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Clerodendrum",
+      "species": "thomsoniae",
+      "images": [],
+      "wikipedia_title": "Clerodendrum_thomsoniae",
+      "origin": "Africa occidentale tropicale",
+      "notes": "È classificato come un arbusto rampicante. Se lasciato crescere liberamente e con i giusti sostegni (tralicci o graticci), si comporta come una liana, mentre con potature costanti può essere mantenuto con una forma più compatta a cespuglio.",
+      "anecdote": "Clerodendrum thomsoniae Balf., 1862, è una pianta arbustiva appartenente alla famiglia delle Lamiacee.",
+      "tags": [
+        "tropicale",
+        "arbusto"
+      ],
+      "date_added": "2026-04-20"
     }
   ]
 }
