@@ -397,6 +397,26 @@
         "arbusto"
       ],
       "date_added": "2026-04-20"
+    },
+    {
+      "id": "clerodendrum-trichotomum",
+      "scientific_name": "Clerodendrum trichotomum",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Clerodendrum",
+      "species": "trichotomum",
+      "images": [],
+      "wikipedia_title": "Clerodendrum_trichotomum",
+      "origin": "Asia orientale",
+      "notes": "Predilige il pieno sole o la mezz'ombra luminosa. A differenza di altre specie del genere, sopporta bene il sole diretto anche in estate.\nInteressante la var. fargesii.",
+      "anecdote": "Clerodendrum trichotomum Thunb., 1784 è una pianta arborea appartenente alla famiglia delle Lamiacee.",
+      "tags": [
+        "arbusto",
+        "rustico",
+        "deciduo"
+      ],
+      "date_added": "2026-04-20"
     }
   ]
 }
