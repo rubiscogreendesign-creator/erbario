@@ -377,6 +377,26 @@
         "arbusto"
       ],
       "date_added": "2026-04-20"
+    },
+    {
+      "id": "clerodendrum-bungei",
+      "scientific_name": "Clerodendrum bungei",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Clerodendrum",
+      "species": "bungei",
+      "images": [],
+      "wikipedia_title": "Clerodendrum_bungei",
+      "origin": "Cina e delle regioni dell'Himalaya",
+      "notes": "Comportamento invernale: Nelle zone con inverni rigidi, la parte aerea (fusti e foglie) tende a seccare completamente e morire. Non spaventarti: è una strategia di sopravvivenza.\nRinascita: In primavera, la pianta emette nuovi vigorosi germogli direttamente dalle radici (che sono molto resistenti). Spesso questo \"reset\" naturale aiuta a mantenere la pianta ordinata, dato che tende a diventare un po' disordinata se lasciata crescere indisturbata per anni.",
+      "anecdote": "Clerodendrum bungei, commonly known as rose glory bower, glory flower or Mexican hydrangea, is a species of flowering plant in the deadnettle family, Lamiaceae. Native to China, it is commonly grown in gardens as an ornamental shrub. It has escaped from cultivation and is naturalized in the Americas.",
+      "tags": [
+        "Rustica",
+        "ornamentale",
+        "arbusto"
+      ],
+      "date_added": "2026-04-20"
     }
   ]
 }
