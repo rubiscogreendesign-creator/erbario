@@ -340,6 +340,24 @@
         "orto"
       ],
       "date_added": "2026-04-20"
+    },
+    {
+      "id": "clerodendrum-paniculatum",
+      "scientific_name": "Clerodendrum paniculatum",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Clerodendrum",
+      "species": "paniculatum",
+      "images": [],
+      "wikipedia_title": "Clerodendrum_paniculatum",
+      "origin": "Asia tropicale",
+      "notes": "Il Clerodendrum paniculatum, il fiore della pagoda, è una specie di pianta con fiori del genere Clerodendrum, appartenente alla famiglia delle Mentacee. È originario dell'Asia tropicale e di Papuasia, Figi e Polinesia francese. È stato introdotto in America Centrale. ",
+      "anecdote": "Clerodendrum paniculatum, the pagoda flower, is a species of flowering plant in the genus Clerodendrum of the Mint Family (Lamiaceae). It is native to tropical Asia and Papuasia, Fiji, and French Polynesia. It is introduced in Central America. It is noted for its red flowers, arranged in a thyrsoid cyme up to 40 cm (16 in) long by 38 cm (15 in) wide, and very precisely formed.",
+      "tags": [
+        "Tropicale"
+      ],
+      "date_added": "2026-04-20"
     }
   ]
 }
