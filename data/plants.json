@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-19",
+  "updated": "2026-04-20",
   "plants": [
     {
       "scientific_name": "Echium wildpretii",
@@ -318,6 +318,28 @@
         "perenne"
       ],
       "date_added": "2026-04-19"
+    },
+    {
+      "id": "vicia-faba",
+      "scientific_name": "Vicia faba",
+      "common_names": [
+        "Fava"
+      ],
+      "family": "Fabaceae",
+      "subfamily": "",
+      "genus": "Vicia",
+      "species": "faba",
+      "images": [],
+      "wikipedia_title": "Vicia_faba",
+      "origin": "",
+      "notes": "Fiori: Presentano la tipica corolla papilionacea delle leguminose, di colore bianco con una caratteristica macchia nera o scura sulle ali.",
+      "anecdote": "La fava è una pianta della famiglia delle Leguminose o Fabaceae.",
+      "tags": [
+        "leguminosa",
+        "annuale",
+        "orto"
+      ],
+      "date_added": "2026-04-20"
     }
   ]
 }
