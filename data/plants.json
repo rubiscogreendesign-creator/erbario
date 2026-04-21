@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-20",
+  "updated": "2026-04-21",
   "plants": [
     {
       "scientific_name": "Echium wildpretii",
@@ -417,6 +417,26 @@
         "deciduo"
       ],
       "date_added": "2026-04-20"
+    },
+    {
+      "id": "salvia-nemorosa",
+      "scientific_name": "Salvia nemorosa",
+      "common_names": [],
+      "family": "Lamiaceae",
+      "subfamily": "",
+      "genus": "Salvia",
+      "species": "nemorosa",
+      "images": [],
+      "wikipedia_title": "Salvia_nemorosa",
+      "origin": "",
+      "notes": "La salvia fiorisce in estate, da giugno a settembre.",
+      "anecdote": "La salvia nemorosa è una pianta perenne erbacea aromatica dai fiori labiati appartenente alla famiglia delle Lamiacee.",
+      "tags": [
+        "Rustica",
+        "aromatica",
+        "perenne"
+      ],
+      "date_added": "2026-04-21"
     }
   ]
 }
