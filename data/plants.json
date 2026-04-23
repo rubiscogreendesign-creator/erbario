@@ -1,5 +1,5 @@
 {
-  "updated": "2026-04-21",
+  "updated": "2026-04-23",
   "plants": [
     {
       "scientific_name": "Echium wildpretii",
@@ -437,6 +437,26 @@
         "perenne"
       ],
       "date_added": "2026-04-21"
+    },
+    {
+      "id": "wisteria-sinensis",
+      "scientific_name": "Wisteria sinensis",
+      "common_names": [],
+      "family": "Fabaceae",
+      "subfamily": "",
+      "genus": "Wisteria",
+      "species": "sinensis",
+      "images": [],
+      "wikipedia_title": "Wisteria_sinensis",
+      "origin": "",
+      "notes": "Si arriccia da sinistra a destra.",
+      "anecdote": "Il glicine comune è una pianta appartenente alla famiglia delle Fabaceae, originaria della Cina.",
+      "tags": [
+        "leguminosa",
+        "rustica",
+        "caducifoglie"
+      ],
+      "date_added": "2026-04-23"
     }
   ]
 }
